@@ -131,7 +131,7 @@ if __name__ == "__main__":
             edit_message(msgs["bat"], text_bat)
             edit_message(msgs["apps"], text_apps)
 
-            time.sleep(random.randint(30, 60))
+            time.sleep(random.randint(1, 30))
 
     except KeyboardInterrupt:
         delete_messages()
