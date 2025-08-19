@@ -3,6 +3,8 @@ import random
 import asyncio
 import subprocess
 import requests
+import time
+from datetime import datetime
 
 # ========= CONFIG =========
 BOT_TOKEN = "8272026718:AAF8Zrd4Usetik-gWYbFX4NkGWJs-pz4mZU"
@@ -49,13 +51,22 @@ def delete_message(msg_id):
         pass
 
 # ========= INFO FUNCTIONS =========
+def get_device_info():
+    try:
+        model = subprocess.getoutput("getprop ro.product.model")
+        android = subprocess.getoutput("getprop ro.build.version.release")
+        codename = subprocess.getoutput("getprop ro.product.device")
+        return f"📱 <b>Dispositivo:</b> {model}\n🤖 <b>Android:</b> {android} ({codename})"
+    except:
+        return "📱 Info dispositivo no disponible"
+
 def get_battery_info():
     try:
         cap = subprocess.check_output("cat /sys/class/power_supply/battery/capacity", shell=True).decode().strip()
         stat = subprocess.check_output("cat /sys/class/power_supply/battery/status", shell=True).decode().strip()
-        volt = subprocess.check_output("cat /sys/class/power_supply/battery/voltage_now", shell=True).decode().strip()
         curr = subprocess.check_output("cat /sys/class/power_supply/battery/current_now", shell=True).decode().strip()
-        return f"🔋 <b>Batería</b>\n{cap}% | {stat}\nVoltaje: {int(volt)/1e6:.2f} V\nCorriente: {int(curr)/1000} mA"
+        curr_ma = int(curr) / 1000
+        return f"🔋 <b>Batería:</b> {cap}% ({stat}, {curr_ma:+.0f} mA)"
     except:
         return "🔋 Info batería no disponible"
 
@@ -63,75 +74,40 @@ def get_network_info():
     try:
         ssid = subprocess.getoutput("dumpsys wifi | grep 'SSID'")
         bssid = subprocess.getoutput("dumpsys wifi | grep 'BSSID'")
-        rx = subprocess.getoutput("cat /proc/net/dev | grep wlan0 | awk '{print $2}'")
-        tx = subprocess.getoutput("cat /proc/net/dev | grep wlan0 | awk '{print $10}'")
-        return f"📶 <b>Red</b>\n{ssid}\n{bssid}\nRX: {rx} bytes\nTX: {tx} bytes"
+        return f"🌐 <b>WiFi:</b> {ssid}, {bssid}"
     except:
-        return "📶 Info red no disponible"
+        return "🌐 Info red no disponible"
 
 def get_bluetooth_info():
     try:
-        bt = subprocess.getoutput("dumpsys bluetooth_manager | grep 'state'")
-        return f"🔵 <b>Bluetooth</b>\n{bt}"
+        bt_state = subprocess.getoutput("dumpsys bluetooth_manager | grep 'state'")
+        if "ON" in bt_state:
+            return "🔵 <b>Bluetooth:</b> Activado"
+        else:
+            return "🔵 <b>Bluetooth:</b> Desactivado"
     except:
         return "🔵 Info BT no disponible"
 
-def get_running_apps():
+def get_screen_info():
     try:
-        apps = subprocess.getoutput("ps -A | grep u0_a | awk '{print $9}' | head -n 10")
-        return f"📱 <b>Apps en segundo plano</b>\n{apps}"
+        brillo = subprocess.getoutput("settings get system screen_brightness")
+        brillo_pct = int(brillo) * 100 // 255
+        screen = subprocess.getoutput("dumpsys power | grep 'Display Power'")
+        estado = "Encendida" if "ON" in screen else "Apagada"
+        return f"💡 <b>Brillo:</b> {brillo_pct}%\n🖥 <b>Pantalla:</b> {estado}"
     except:
-        return "📱 Apps no disponibles"
+        return "💡 Pantalla/brillo no disponible"
 
-# ========= MAIN LOOP =========
-async def main():
-    # limpiar mensajes viejos
-    if os.path.exists(MSG_FILE):
-        with open(MSG_FILE, "r") as f:
-            for line in f:
-                try:
-                    delete_message(int(line.strip()))
-                except:
-                    pass
-        os.remove(MSG_FILE)
-
-    messages = {}
-    with open(MSG_FILE, "w") as f:
-        for title, func in {
-            "bateria": get_battery_info,
-            "red": get_network_info,
-            "bt": get_bluetooth_info,
-            "apps": get_running_apps,
-        }.items():
-            msg_id = send_message(func())
-            if msg_id:
-                messages[title] = msg_id
-                f.write(str(msg_id) + "\n")
-
-    # actualización aleatoria
-    while True:
-        for key, func in {
-            "bateria": get_battery_info,
-            "red": get_network_info,
-            "bt": get_bluetooth_info,
-            "apps": get_running_apps,
-        }.items():
-            try:
-                edit_message(messages[key], func())
-            except:
-                pass
-            await asyncio.sleep(random.randint(*UPDATE_INTERVAL))
-
-if __name__ == "__main__":
+def get_foreground_app():
     try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        # limpiar mensajes al salir
-        if os.path.exists(MSG_FILE):
-            with open(MSG_FILE, "r") as f:
-                for line in f:
-                    try:
-                        delete_message(int(line.strip()))
-                    except:
-                        pass
-            os.remove(MSG_FILE)
+        app = subprocess.getoutput("dumpsys window | grep mCurrentFocus")
+        return f"📲 <b>App en primer plano:</b> {app}"
+    except:
+        return "📲 App no disponible"
+
+def get_uptime():
+    try:
+        with open("/proc/uptime") as f:
+            seconds = float(f.readline().split()[0])
+        m, s = divmod(int(seconds), 60)
+        h, m = divmod(m, 60)
