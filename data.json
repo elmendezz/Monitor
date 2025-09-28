@@ -1,13 +1,13 @@
 {
-    "chargeLevel": "100%",
-    "chargingStatus": "Not charging",
+    "chargeLevel": "83%",
+    "chargingStatus": "Charging",
     "power": "0.00W",
     "current": "0.000A",
-    "voltage": "4.65V",
-    "temperature": "27.1\u00b0C",
-    "timeToFull": "Calculando...",
-    "foregroundApp": "U",
-    "backgroundApps": 1,
-    "uptime": "00:35:44 53 min,  0 users,  load average: 37.06, 36.63, 31.15",
-    "log": "[2025-09-28 00:35:44] - Push desde Termux."
+    "voltage": "4136.00V",
+    "temperature": "32.8\u00b0C",
+    "timeToFull": "N/A",
+    "foregroundApp": "u0 com.termux",
+    "backgroundApps": 295,
+    "uptime": "0 weeks, 0 days, 2 hours, 54 minutes",
+    "log": "[2025-09-28 00:36:27] - Push desde Termux (Dumpsys)."
 }
