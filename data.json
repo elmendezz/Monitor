@@ -3,11 +3,11 @@
     "chargingStatus": "Not charging",
     "power": "0.00W",
     "current": "0.000A",
-    "voltage": "4.79V",
-    "temperature": "26.9\u00b0C",
+    "voltage": "4.67V",
+    "temperature": "26.5\u00b0C",
     "timeToFull": "Calculando...",
     "foregroundApp": "U",
     "backgroundApps": 1,
-    "uptime": "00:33:57 51 min,  0 users,  load average: 36.05, 36.40, 30.43",
-    "log": "[2025-09-28 00:33:57] - Push desde Termux."
+    "uptime": "00:34:09 51 min,  0 users,  load average: 36.27, 36.43, 30.50",
+    "log": "[2025-09-28 00:34:09] - Push desde Termux."
 }
