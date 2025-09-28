@@ -4,10 +4,10 @@
     "power": "0.00W",
     "current": "0.000A",
     "voltage": "4.68V",
-    "temperature": "27.7\u00b0C",
+    "temperature": "28.0\u00b0C",
     "timeToFull": "Calculando...",
     "foregroundApp": "U",
     "backgroundApps": 1,
-    "uptime": "00:11:26 28 min,  0 users,  load average: 37.23, 22.55, 10.04",
-    "log": "[2025-09-28 00:11:26] - Push desde Termux."
+    "uptime": "00:11:38 29 min,  0 users,  load average: 37.61, 23.10, 10.36",
+    "log": "[2025-09-28 00:11:38] - Push desde Termux."
 }
