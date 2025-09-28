@@ -1,13 +1,13 @@
 {
-    "chargeLevel": "83%",
-    "chargingStatus": "Charging",
+    "chargeLevel": "63%",
+    "chargingStatus": "Discharging",
     "power": "0.00W",
     "current": "0.000A",
-    "voltage": "4156.00V",
-    "temperature": "33.0\u00b0C",
+    "voltage": "0.00V",
+    "temperature": "36.4\u00b0C",
     "timeToFull": "N/A",
     "foregroundApp": "u0 com.termux",
-    "backgroundApps": 294,
-    "uptime": "0 weeks, 0 days, 2 hours, 55 minutes",
-    "log": "[2025-09-28 00:36:59] - Push desde Termux (Dumpsys)."
+    "backgroundApps": 282,
+    "uptime": "0 weeks, 0 days, 18 hours, 51 minutes",
+    "log": "[2025-09-28 16:33:44] - Push desde Termux (Dumpsys)."
 }
